@@ -4,7 +4,7 @@
 
 App = angular.module("myApp", [])
 
-App.controller("TimetableCtrl", ["$scope", ($scope) ->
+App.controller("TimetableCtrl", ["$scope", "$http", ($scope, $http) ->
   $scope.weeks = []
   $scope.lunchCount = 0
 
@@ -22,10 +22,16 @@ App.controller("TimetableCtrl", ["$scope", ($scope) ->
       $scope.weeks[week][day] = 0
 
   $scope.getClass = (day) ->
-    if day is 0
-      "btn-success"
-    else
-      "btn-danger"
+    if day is 0 then "btn-success" else "btn-danger"
+
+  $scope.submitCount = ->
+    jsonObj = {"data": $scope.weeks}
+    $http.post('/api/lunches/submit', jsonObj)
+      .success (data) ->
+        console.log data
+      .error (data) ->
+        console.log data
 
   $scope.init()
+
 ])
